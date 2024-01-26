@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# takes username input
+read -p "Enter GitHub username: " username
+
+# if else for username check
+if [ -z "$username" ]; then
+    echo "Username is required."
+    exit 1
+fi
+
+url="https://api.github.com/users/$username/repos"
+repo_response=$(curl -s $url)
+repo_names=$(echo "$repo_response" | jq -r '.[].name')
+echo "Repositories and contributors for $username:"
+for repo_name in $repo_names; do
+    contributor_url="https://api.github.com/repos/$username/$repo_name/contributors"
+    contributor_response=$(curl -s $contributor_url)
+    total_contributors=$(echo "$contributor_response" | jq -r 'map(.login) | .')
+    echo "Repository Name : $repo_name" 
+    echo "Contributors : $total_contributors"
+    echo "-------------------"
+done

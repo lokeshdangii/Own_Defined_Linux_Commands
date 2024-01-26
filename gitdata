@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ "$1" == "--help" ] || [ "$1" == "-h" ] || [ "$1" == "" ] ; then
+	echo "gitdata: "
+	echo "Usage: List public repos and their contributors, tags count and languages used in repository"
+	echo "syntax : gitdata <username>"
+	echo "example : gitdata lokeshdangii"
+	exit 0
+fi
+
+username=$1
+url="https://api.github.com/users/$username/repos"
+repo_response=$(curl -s $url)
+repo_names=$(echo "$repo_response" | jq -r '.[].name')
+echo "Repositories and contributors for $username:"
+for repo_name in $repo_names; do
+    contributor_url="https://api.github.com/repos/$username/$repo_name/contributors"
+    contributor_response=$(curl -s $contributor_url)
+    total_contributors=$(echo "$contributor_response" | jq -r 'length')
+
+    tags_url="https://api.github.com/repos/$username/$repo_name/tags"
+    tags_response=$(curl -s $tags_url)
+    total_tags=$(echo "$tags_response" | jq -r 'length')
+
+    languages_url="https://api.github.com/repos/$username/$repo_name/languages"
+    languages_response=$(curl -s $languages_url)
+
+
+    echo "Repository Name : $repo_name"
+    echo "Contributors    : $total_contributors"
+    echo "Tags            : $total_tags"
+    echo "Languages:"
+    echo "$languages_response"
+    echo "-------------------"
+done
+

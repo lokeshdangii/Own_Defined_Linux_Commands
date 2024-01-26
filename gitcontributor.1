@@ -1,0 +1,18 @@
+.TH GITCONTRIBUTOR 1 "Git Command"
+.SH NAME
+gitcontributor \- display repositories and contributors for a GitHub user
+.SH SYNOPSIS
+.B gitcontributor
+.I username
+.SH DESCRIPTION
+.B gitcontributor
+is a Bash script that retrieves information about GitHub repositories and their contributors for a specified user.
+.PP
+The script takes a GitHub username as an argument and queries the GitHub API to fetch repository names and contributors.
+.SH OPTIONS
+.I username
+The GitHub username for which to fetch repository and contributor information.
+.SH EXAMPLES
+To display repositories and contributors for the user "exampleuser," run:
+.B gitcontributor exampleuser
+

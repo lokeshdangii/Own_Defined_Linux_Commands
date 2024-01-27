@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Check if the username is provided as a command-line argument
+if [ -z "$1" ]; then
+    echo "Error: Please provide a GitHub username as a command-line argument."
+    echo "Usage: gitrepos <github_username>"
+    exit 1
+fi
+
+# Get the GitHub username as a command-line argument
+username=$1
+
+# Construct the GitHub API URL for the user's repositories
+github_api_url="https://api.github.com/users/$username/repos"
+
+# Make a request to the GitHub API and store the response
+repo_response=$(curl -s $github_api_url)
+
+# Extract the repository names from the response using jq
+repo_names=$(echo "$repo_response" | jq -r '.[].name')
+
+# Display a header for the list of repositories
+echo "Repositories of $username:"
+echo ""
+
+# Iterate over each repository name and display it
+for repo_name in $repo_names; do
+    echo "  $repo_name"
+done
